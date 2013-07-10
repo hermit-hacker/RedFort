@@ -75,11 +75,41 @@ confirmHardening()
 
 
 ##########################################################################
+# Set module status to FAIL
+setModuleFail()
+{
+  FAILFLAG="FAIL"
+}
+
+
+##########################################################################
 # Output module heading to screen and log file
 reportModuleRunning()
 {
   echo "Running module: $1"
+  FAILFLAG="PASS"
   writeToLog "Module: $1 Executing"
+}
+
+
+##########################################################################
+# Output module completion to screen an log file
+reportModuleComplete()
+{
+  STATDESC="Module complete: $1"
+  declare -i WL=70
+  declare -i STATDES=${#STATDESC}
+  declare -i STATLEN=${#FAILFLAG}
+  declare -i PAD=$WL-$STATLEN-$STATDES
+  echo -n "$STATDESC"
+  padPrint $PAD
+  if [ "$FAILFLAG" != "FAIL" ]; then
+    echo -e "[ \033[32m$STATUS\033[m ]"
+  else
+    echo -e "[ \033[31m$STATUS\033[m ]"
+  fi
+  echo
+  writeToLog "Module: $1 completed with status: $FAILFLAG"
 }
 
 
@@ -455,10 +485,6 @@ showHelp()
     echo "------------------------------------------------------------------------------"
     echo
     # Generate the list of platforms
-    cd $TEMPLDIR
-    for DIR in `find . -mindepth 1 -type d -print | cut -c 3- | grep -v default | sort`; do
-      cat $DIR/platform_info.txt
-    done
     echo
     echo "------------------------------------------------------------------------------"
     echo

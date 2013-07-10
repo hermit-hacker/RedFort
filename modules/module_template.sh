@@ -64,10 +64,11 @@ check_modtemp()
       comparePermissions $CPERM $VALUE
       if [ "$PERMEVAL" == "MORE" ]; then
         reportSubTaskStatus "$KEY" "FAIL" "red"
+        setModuleFail
       fi
     fi
   done < <( stripFileComments $MODTEMPCONFIG )
-  reportSubTaskStatus "File permission evaluations" "DONE"
+  reportModuleComplete "Module Template (modtemp)"
 }
 
 #####################################################################
@@ -85,7 +86,7 @@ fix_modtemp()
       evaluateAction "chmod $VALUE $KEY"
     fi
   done < <( stripFileComments $MODTEMPCONFIG )
-  reportSubTaskStatus "Correcting file permissions" "DONE"
+  reportModuleComplete "Module Template (modtemp)"
 }
 #####################################################################
 # Undo section, function name specified in "UNDO" comment above

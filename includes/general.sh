@@ -149,6 +149,19 @@ getKeyValuePair()
 
 
 ##########################################################################
+# Return a specific space-separated entry (excluding commented ones)
+getUnixSetting()
+{
+  TARGETKEY=$1
+  SOURCEFILE=$2
+  UVALUE=`stripFileComments $SOURCEFILE | grep -e "^$TARGETKEY" | cut -d " " -f 2`
+  if [ "$UVALUE" == "" ]; then
+    UVALUE="NOTHINGFOUND"
+  fi
+}
+
+
+##########################################################################
 # Return colon-separated entries as value pairs
 writeKeyValuePair()
 {
